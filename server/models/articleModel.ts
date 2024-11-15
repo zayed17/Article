@@ -7,6 +7,7 @@ interface IArticle extends Document {
   category: string;
   tags: string[];
   imageUrl: string;
+  userId: mongoose.Schema.Types.ObjectId; 
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,7 +18,8 @@ const articleSchema = new Schema<IArticle>({
   content: { type: String, required: true },
   category: { type: String, required: true },
   tags: { type: [String], required: true },
-  imageUrl: { type: String, required: true }, 
+  imageUrl: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId,ref: 'User',required: true },
 }, {
   timestamps: true, 
 });
