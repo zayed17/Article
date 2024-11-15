@@ -27,3 +27,13 @@ export const addArticle = async (req: any, res: Response) => {
       }
     };
     
+
+
+    export const getArticles = async (req: any, res: Response) => {
+        try {
+          const articles = await Article.find({}); 
+          res.status(200).json(articles);
+        } catch (error: any) {
+          res.status(500).json({message: 'Failed to fetch articles',error: error.message,});
+        }
+      };

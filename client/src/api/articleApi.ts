@@ -14,7 +14,10 @@ export const articleApi = createApi({
         body: credentials,
       }),
     }),
+    getArticles: builder.query({
+        query: () => 'get-articles',
+      }),
   }),
 });
 
-export const { useAddArticleMutation } = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery } = articleApi;
