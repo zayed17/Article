@@ -3,6 +3,7 @@ import {  Spin, Alert, Button, Avatar } from 'antd';
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useGetArticlesQuery } from '../api/articleApi';
+import { formatDistanceToNow } from 'date-fns';
 
 const Main: React.FC = () => {
   const { data: articles, error, isLoading } = useGetArticlesQuery({});
@@ -14,7 +15,6 @@ const Main: React.FC = () => {
   };
   
   const handleBlockToggle = (articleId: string) => {
-    // Add the logic for blocking, e.g., blocking the article or user
   };
   
   const handleLikeToggle = (articleId: string) => {
@@ -51,14 +51,17 @@ const Main: React.FC = () => {
           const truncateDescription = (text: string, length: number) => {
             return text.length > length ? text.substring(0, length) + '...' : text;
           };
+
+          const formattedTime = formatDistanceToNow(new Date(article.createdAt), { addSuffix: true });
+
   
           return (
             <div key={article._id} className="w-full border shadow-lg rounded-lg overflow-hidden mb-6">
               <div className="flex items-center p-3">
                 <Avatar src={'/article.jpg'} size={50} />
                 <div className="ml-4">
-                  <p className="font-semibold text-gray-900">messi</p>
-                  <p className="text-sm text-gray-500">5 min ago</p>
+                  <p className="font-semibold text-gray-900">{article?.userId?.firstName + " " + article?.userId?.lastName}</p>
+                  <p className="text-sm text-gray-500">Posted {formattedTime}</p>
                 </div>
               </div>
   

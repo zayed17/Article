@@ -9,13 +9,14 @@ export const addArticle = async (req: any, res: Response) => {
         const { title, shortDescription, content, category, tags } = req.body;
 
         const imageUrl = req.file ? req.file.location : null;
-    
+        const userId = req.userId
         const newArticle = new Article({
           title,
           shortDescription,
           content,
           category,
           tags,
+          userId,
           imageUrl, 
         });
     
@@ -27,11 +28,10 @@ export const addArticle = async (req: any, res: Response) => {
       }
     };
     
-
-
     export const getArticles = async (req: any, res: Response) => {
         try {
-          const articles = await Article.find({}); 
+          const articles = await Article.find({}).populate('userId')
+          console.log(articles)
           res.status(200).json(articles);
         } catch (error: any) {
           res.status(500).json({message: 'Failed to fetch articles',error: error.message,});

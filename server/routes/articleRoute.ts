@@ -4,6 +4,7 @@ import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3'; 
 import dotenv from 'dotenv';
 import { addArticle,getArticles } from '../controllers/articleController';
+import authMiddleware from '../middleware/authMiddleware';
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post('/add-article', upload.single('image'), addArticle);
+router.post('/add-article', upload.single('image'), authMiddleware, addArticle);
 router.get('/get-articles', getArticles);
 
 

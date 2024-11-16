@@ -51,7 +51,7 @@ export const signup = async (req: Request, res: Response) => {
         res.status(400).json({ message: 'Invalid email or password' });
         return;
       }
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
       res.cookie('userToken', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
