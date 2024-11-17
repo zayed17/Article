@@ -32,7 +32,10 @@ export const articleApi = createApi({
           method: 'PATCH', 
         }),
       }),
+    getUserStats: builder.query({
+        query: () => 'user-stats',
+      }),   
   }),
 });
 
-export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation } = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery } = articleApi;

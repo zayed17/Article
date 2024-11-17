@@ -72,7 +72,7 @@ const ArticleTable = () => {
 
   return (
     <div className="mt-8 text-center sm:text-left max-w-screen-lg mx-auto"> 
-      <h2 className="text-2xl font-bold text-gray-900">Articles</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Articles Posted</h2>
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <Spin size="large" />

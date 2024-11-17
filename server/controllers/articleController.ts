@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Article from '../models/articleModel';
 import mongoose from 'mongoose';
+import { Types } from 'mongoose'; // Ensure mongoose.Types is available
 
 
 
@@ -80,7 +81,6 @@ export const addArticle = async (req: any, res: Response) => {
       export const unlikeArticle = async (req: any, res: Response) => {
         const { articleId } = req.params;
         const userId = req.userId;
-      console.log(userId,articleId,"hello")
         try {
           if (!articleId || !userId || !mongoose.Types.ObjectId.isValid(articleId) || !mongoose.Types.ObjectId.isValid(userId)) {
              res.status(400).json({ message: 'Invalid article ID or user ID' });
@@ -115,3 +115,51 @@ export const addArticle = async (req: any, res: Response) => {
         }
       };
             
+
+      
+export const getUserArticleStats = async (req: any, res: Response) => {
+  try {
+    const userId = req.userId; 
+
+    if (!userId) {
+       res.status(400).json({ message: 'User ID is required' });
+       return
+    }
+
+    const userObjectId = new Types.ObjectId(userId); 
+    const result = await Article.aggregate([
+      {
+        $facet: {
+          likes: [
+            { $match: { likedBy: { $in: [userObjectId] } } },
+            { $count: "liked" }
+          ],
+          dislikes: [
+            { $match: { dislikedBy: { $in: [userObjectId] } } },
+            { $count: "disliked" }
+          ],
+          articles: [
+            { $match: { userId: userObjectId } },
+            { $count: "articles" }
+          ]
+        }
+      }
+    ]);
+    if (!result || result.length === 0) {
+       res.status(404).json({ message: 'No articles found for this user' });
+       return
+    }
+
+    const simplifiedResult = {
+      likes: result[0].likes.length > 0 ? result[0].likes[0].liked : 0,
+      dislikes: result[0].dislikes.length > 0 ? result[0].dislikes[0].disliked : 0,
+      articles: result[0].articles.length > 0 ? result[0].articles[0].articles : 0
+    };
+    console.log(simplifiedResult)
+
+    res.status(200).json(simplifiedResult);
+  } catch (error) {
+    console.error('Error fetching user article stats:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

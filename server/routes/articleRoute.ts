@@ -3,7 +3,7 @@ import multer from 'multer';
 import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3'; 
 import dotenv from 'dotenv';
-import { addArticle,getArticles, likeArticle ,unlikeArticle} from '../controllers/articleController';
+import { addArticle,getArticles, likeArticle ,unlikeArticle,getUserArticleStats} from '../controllers/articleController';
 import authMiddleware from '../middleware/authMiddleware';
 
 dotenv.config();
@@ -38,5 +38,6 @@ router.patch('/like/:articleId', authMiddleware, likeArticle);
 
 // Unlike an article
 router.patch('/unlike/:articleId', authMiddleware, unlikeArticle);
+router.get('/user-stats', authMiddleware, getUserArticleStats);
 
 export default router;

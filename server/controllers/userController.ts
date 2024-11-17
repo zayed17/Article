@@ -64,3 +64,22 @@ export const signup = async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };  
+
+  export const getUser = async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+      if (!userId) {
+         res.status(400).json({ message: 'User ID is required' });
+         return 
+      }
+      const user = await User.findOne({ _id: userId });
+      if (!user) {
+         res.status(404).json({ message: 'User not found' });
+         return 
+      }
+      res.status(200).json(user);
+    } catch (error) {
+      console.error('Error getting user:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
