@@ -120,3 +120,38 @@ export const signup = async (req: Request, res: Response) => {
     }
   };
   
+
+  export const changePassword = async (req: any, res: Response) => {
+    try {
+      const userId = req.userId; 
+  
+      const { oldPassword, newPassword } = req.body; 
+  
+      const user = await User.findById(userId);
+      if (!user) {
+         res.status(404).json({ message: 'User not found' });
+         return
+      }
+  
+      const isOldPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+      console.log(isOldPasswordCorrect,"chda")
+      if (!isOldPasswordCorrect) {
+         res.status(400).json({ message: 'Incorrect old password' });
+         return
+      }
+  
+      const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+  
+      user.password = hashedNewPassword;
+      await user.save();
+      console.log("success")
+  
+       res.status(200).json({ message: 'Password updated successfully' });
+       return
+    } catch (error) {
+      console.error('Error updating user password:', error);
+       res.status(500).json({ message: 'Internal server error' });
+       return
+    }
+  };
+  

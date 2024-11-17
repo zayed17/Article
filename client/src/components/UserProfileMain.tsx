@@ -1,19 +1,32 @@
 import { useState } from 'react';
-import { PhoneOutlined, MailOutlined, EditOutlined } from '@ant-design/icons';
+import { PhoneOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { useGetUserQuery } from '../api/userApi';
 import { useGetUserStatsQuery } from '../api/articleApi';
 import EditUserModal from './EditUserModal';
-
-
+import { Menu, Dropdown, message } from 'antd';
+import ChangePasswordModal from './ChangePasswordModal';
 
 const UserProfileMain = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const { data: user } = useGetUserQuery({});
   const { data: userStat } = useGetUserStatsQuery({});
+  const handleMenuClick = (e: any) => {
+    if (e.key === 'edit') {
+      setIsModalOpen(true);
+    } else if (e.key === 'changePassword') {
+      setIsPasswordModalOpen(true);
+    }
+  };
 
 
-
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="edit">Edit User</Menu.Item>
+      <Menu.Item key="changePassword">Change Password</Menu.Item>
+    </Menu>
+  );
 
   return (
     <div className="bg-gray-50 rounded-lg overflow-hidden shadow-lg">
@@ -48,14 +61,13 @@ const UserProfileMain = () => {
               <h1 className="text-3xl font-bold text-gray-900">
                 {user?.firstName} {user?.lastName}
               </h1>
-              <EditOutlined
-                className="text-gray-600 cursor-pointer hover:text-gray-900"
-                onClick={() => setIsModalOpen(true)}
-              />
+              <Dropdown overlay={menu} trigger={['click']}>
+                <SettingOutlined className="text-gray-600 cursor-pointer hover:text-gray-900" />
+              </Dropdown>
             </div>
 
             {user?.preferences && (
-          <p className="text-gray-600 mt-1">{user?.preferences.map((preference: string) => preference).join(', ')}</p>
+              <p className="text-gray-600 mt-1">{user?.preferences.map((preference: string) => preference).join(', ')}</p>
             )}
 
             <div className="flex items-center justify-center mt-2 text-gray-600 text-sm">
@@ -109,7 +121,11 @@ const UserProfileMain = () => {
           </div>
         </div>
       </div>
-      <EditUserModal isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
+
+      {/* Edit User Modal */}
+      <EditUserModal
+        isModalOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         initialValues={{
           firstName: user?.firstName || '',
           lastName: user?.lastName || '',
@@ -117,6 +133,12 @@ const UserProfileMain = () => {
           phone: user?.phone || '',
           preferences: user?.preferences || [],
         }}
+      />
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isModalOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
       />
     </div>
   );
