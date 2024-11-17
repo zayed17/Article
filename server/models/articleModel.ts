@@ -8,6 +8,10 @@ interface IArticle extends Document {
   tags: string[];
   imageUrl: string;
   userId: mongoose.Schema.Types.ObjectId; 
+  likes: number;  
+  unlikes: number;
+  likedBy: mongoose.Schema.Types.ObjectId[]; 
+  dislikedBy: mongoose.Schema.Types.ObjectId[]; 
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +24,8 @@ const articleSchema = new Schema<IArticle>({
   tags: { type: [String], required: true },
   imageUrl: { type: String, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId,ref: 'User',required: true },
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
+  dislikedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {
   timestamps: true, 
 });

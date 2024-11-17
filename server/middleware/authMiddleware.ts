@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 const authMiddleware = (req: any, res: Response, next: NextFunction) => {
   const token = req.cookies?.userToken; 
-  console.log(token,"chekcing")
+  // console.log(token,"chekcing")
 
   if (!token) {
      res.status(401).json({ message: 'Unauthorized: No token provided' });

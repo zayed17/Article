@@ -14,10 +14,25 @@ export const articleApi = createApi({
         body: credentials,
       }),
     }),
+
     getArticles: builder.query({
         query: () => 'get-articles',
+      }),
+
+    likeArticle: builder.mutation({
+        query: (articleId) => ({
+          url: `like/${articleId}`, 
+          method: 'PATCH', 
+        }),
+      }),  
+
+    unlikeArticle: builder.mutation({
+        query: (articleId) => ({
+          url: `unlike/${articleId}`,
+          method: 'PATCH', 
+        }),
       }),
   }),
 });
 
-export const { useAddArticleMutation, useGetArticlesQuery } = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation } = articleApi;
