@@ -83,3 +83,40 @@ export const signup = async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+
+
+
+  export const updateUser = async (req: any, res: Response) => {
+    try {
+      const userId = req.userId;
+  
+      if (!userId) {
+         res.status(400).json({ message: 'User ID is required' });
+         return
+      }
+      const { firstName, lastName, email, phone, preferences } = req.body;
+      const updatedUser = await User.findByIdAndUpdate(userId,
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          preferences,
+        },
+        { new: true } 
+      );
+  
+      if (!updatedUser) {
+         res.status(404).json({ message: 'User not found' });
+         return
+      }
+
+       res.status(200).json(updatedUser);
+    } catch (error) {
+      console.error('Error updating user:', error);
+       res.status(500).json({ message: 'Internal server error' });
+       return
+    }
+  };
+  

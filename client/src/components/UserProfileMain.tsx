@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { PhoneOutlined, MailOutlined } from '@ant-design/icons';
+import { PhoneOutlined, MailOutlined, EditOutlined } from '@ant-design/icons';
 import { useGetUserQuery } from '../api/userApi';
 import { useGetUserStatsQuery } from '../api/articleApi';
+import EditUserModal from './EditUserModal';
+
+
+
 const UserProfileMain = () => {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: user } = useGetUserQuery({});
   const { data: userStat } = useGetUserStatsQuery({});
 
@@ -39,10 +44,19 @@ const UserProfileMain = () => {
           </div>
 
           <div className="mt-4 text-center">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {user?.firstName} {user?.lastName}
-            </h1>
-            <p className="text-gray-600 mt-1">{user?.headline}</p>
+            <div className="flex items-center justify-center space-x-2">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {user?.firstName} {user?.lastName}
+              </h1>
+              <EditOutlined
+                className="text-gray-600 cursor-pointer hover:text-gray-900"
+                onClick={() => setIsModalOpen(true)}
+              />
+            </div>
+
+            {user?.preferences && (
+          <p className="text-gray-600 mt-1">{user?.preferences.map((preference: string) => preference).join(', ')}</p>
+            )}
 
             <div className="flex items-center justify-center mt-2 text-gray-600 text-sm">
               <MailOutlined className="mr-1" />
@@ -59,7 +73,7 @@ const UserProfileMain = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex gap-3 justify-center">
+          <div className="mt-4 flex gap-3 justify-center">
             <button
               onClick={() => setIsFollowing(!isFollowing)}
               className={`px-6 py-2 rounded-lg font-medium ${isFollowing
@@ -71,7 +85,7 @@ const UserProfileMain = () => {
             </button>
           </div>
 
-          <div className="mt-6 flex justify-between gap-12">
+          <div className="mt-4 flex justify-between gap-12">
             <div className="flex flex-col items-center ">
               <span className="block text-xl font-semibold text-gray-900">
                 {userStat?.likes}
@@ -95,6 +109,15 @@ const UserProfileMain = () => {
           </div>
         </div>
       </div>
+      <EditUserModal isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
+        initialValues={{
+          firstName: user?.firstName || '',
+          lastName: user?.lastName || '',
+          email: user?.email || '',
+          phone: user?.phone || '',
+          preferences: user?.preferences || [],
+        }}
+      />
     </div>
   );
 };

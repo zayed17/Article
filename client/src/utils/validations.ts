@@ -20,3 +20,16 @@ export const validateWordCount = (value: string, minWords: number) => {
     return Promise.resolve();
   };
   
+
+  export const validatePreferences = (value: string[], minPreferences: number) => {
+    if (!value || value.length === 0) {
+      return Promise.reject(new Error('Preferences are required!'));
+    }
+    if (value.length < minPreferences) {
+      return Promise.reject(
+        new Error(`Please select at least ${minPreferences} preferences! Current count: ${value.length}`)
+      );
+    }
+    return Promise.resolve();
+  };
+  

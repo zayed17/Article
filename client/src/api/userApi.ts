@@ -24,7 +24,14 @@ export const userApi = createApi({
     getUser: builder.query({
       query: () => 'get-user',
     }),
+   editUser: builder.mutation({
+      query: (userData) => ({
+        url: 'edit-user',
+        method: 'PATCH',
+        body: userData,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useSignupMutation ,useGetUserQuery} = userApi;
+export const { useLoginMutation, useSignupMutation ,useGetUserQuery,useEditUserMutation} = userApi;
