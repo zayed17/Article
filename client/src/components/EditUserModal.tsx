@@ -19,7 +19,7 @@ interface EditUserModalProps {
 const EditUserModal: React.FC<EditUserModalProps> = ({ isModalOpen, onClose, initialValues }) => {
     const [form] = Form.useForm();
     const [editUser] = useEditUserMutation()
-    const { refetch } = useGetUserQuery({}); // Assuming you have this hook to fetch user data
+    const { refetch } = useGetUserQuery({}); 
 
     const handleFormSubmit = async (values: any) => {
         try {
