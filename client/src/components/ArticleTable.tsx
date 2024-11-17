@@ -1,9 +1,17 @@
-import { useGetArticlesQuery } from '../api/articleApi';
+import { useGetArticlesQuery,useDeleteArticleMutation } from '../api/articleApi';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Table, Button, Popconfirm, Spin } from 'antd';
+import { Table, Button, Popconfirm, Spin, message } from 'antd';
 
 const ArticleTable = () => {
-  const { data: articles, error, isLoading } = useGetArticlesQuery({});
+  const { data: articles, error, isLoading,refetch } = useGetArticlesQuery({});
+  const [deleteArticle] = useDeleteArticleMutation(); 
+
+  const handleDelete = async(id: string) => {
+    await deleteArticle(id).unwrap(); 
+    refetch()
+    message.success('Article delete successful');
+
+  };
 
   const columns = [
     {
@@ -39,7 +47,7 @@ const ArticleTable = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_: any) => (
+      render: (_: any, record: any) => (
         <div className="flex gap-3">
           <Button
             type="primary"
@@ -55,12 +63,11 @@ const ArticleTable = () => {
           />
           <Popconfirm
             title="Are you sure you want to delete this article?"
-            // onConfirm={() => handleDelete(record)} 
+            onConfirm={() => handleDelete(record._id)} // Pass the article ID here
             okText="Yes"
             cancelText="No"
           >
             <Button
-              type="danger"
               shape="circle"
               icon={<DeleteOutlined />}
             />

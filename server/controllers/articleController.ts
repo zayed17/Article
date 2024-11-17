@@ -163,3 +163,21 @@ export const getUserArticleStats = async (req: any, res: Response) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
+export const deleteArticle = async (req: any, res: Response) => {
+  try {
+    const { articleId } = req.params;
+
+    const article = await Article.findByIdAndDelete(articleId);
+
+    if (!article) {
+       res.status(404).json({ message: 'Article not found' });
+       return
+    }
+    res.status(200).json({ message: 'Article deleted successfully', article });
+  } catch (error) {
+    console.error('Error deleting article:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

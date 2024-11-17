@@ -35,7 +35,13 @@ export const articleApi = createApi({
     getUserStats: builder.query({
         query: () => 'user-stats',
       }),   
+    deleteArticle: builder.mutation({
+        query: (articleId) => ({
+          url: `delete/${articleId}`,
+          method: 'DELETE',
+        }),
+      }),
   }),
 });
 
-export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery } = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery,useDeleteArticleMutation } = articleApi;
