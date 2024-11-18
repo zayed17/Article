@@ -9,23 +9,20 @@ import cookieParser from 'cookie-parser';
 dotenv.config(); 
 
 const app = express();
-// const corsOptions = {
-//     // origin:"http://localhost:5173",
-//     origin:  'https://article-murex.vercel.app',
-//     methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//     credentials: true,
-//   };
 const corsOptions = {
-  
-  origin: process.env.VITE_API_URL || 'https://article-murex.vercel.app',
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],  // Allowed headers
-  credentials: true,  // Allow credentials (cookies)
-};
-app.use(cors(corsOptions));  // Apply the CORS middleware globally
+    origin:"http://localhost:5173",
+    methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  };
+// const corsOptions = {
+//   origin: process.env.VITE_API_URL || 'https://article-murex.vercel.app',
+//   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], 
+//   credentials: true,  
+// };
+app.use(cors(corsOptions));  
 
-// app.use(cors(corsOptions))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

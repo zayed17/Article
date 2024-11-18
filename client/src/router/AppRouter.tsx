@@ -7,19 +7,21 @@ import AddArticle from '../components/AddArticleForm';
 import UserProfile from '../pages/UserProfile';
 import ArticlePage from '../pages/Article';
 import EditArticlePage from '../pages/EditArticlePage';
+import ProtectedRoute from './Protected';
+import PublicRoute from './Public';
 
 
 const AppRouter: React.FC = () => {
   return (
     <Router>
       <Routes>
-         <Route path='/' element={<HomePage/>} />
-         <Route path="/login" element={<Login />} />
-         <Route path='/signup' element={<SignUp/>} />
-         <Route path='/add-article' element={<AddArticle/>} />
-         <Route path='/profile' element={<UserProfile/>} />
-         <Route path='/article/:articleId' element={<ArticlePage/>} />
-         <Route path='/edit-article/:articleId' element={<EditArticlePage/>} />
+         <Route path="/login" element={<PublicRoute redirectTo='/' element={Login} />} />
+         <Route path="/signup" element={<PublicRoute redirectTo='/' element={SignUp} />} />
+         <Route path="/" element={<ProtectedRoute redirectTo='/login' element={HomePage} />} />
+         <Route path="/profile" element={<ProtectedRoute redirectTo='/login' element={UserProfile} />} />
+         <Route path="/add-article" element={<ProtectedRoute redirectTo='/login' element={AddArticle} />} />
+         <Route path="/edit-article/:articleId" element={<ProtectedRoute redirectTo='/login' element={EditArticlePage} />} />
+         <Route path="/article/:articleId" element={<ProtectedRoute redirectTo='/login' element={ArticlePage} />} />
       </Routes>
     </Router>
   );

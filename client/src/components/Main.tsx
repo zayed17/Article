@@ -51,7 +51,6 @@ const Main: React.FC = () => {
 
   return (
     <div className="main-feed-container mx-auto max-w-4xl mt-6 mb-6 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Latest Articles</h1>
       {articles && articles.length > 0 ? (
         articles.map((article: any) => {
           const truncateDescription = (text: string, length: number) => {
