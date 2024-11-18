@@ -4,10 +4,11 @@ import { LikeOutlined, DislikeOutlined, LikeFilled, DislikeFilled } from '@ant-d
 import { Link } from 'react-router-dom';
 import { useGetArticlesQuery, useLikeArticleMutation, useUnlikeArticleMutation } from '../api/articleApi';
 import { formatDistanceToNow } from 'date-fns';
+import { useGetUserQuery } from '../api/userApi';
 
 const Main: React.FC = () => {
   const { data: articles, error, isLoading ,refetch} = useGetArticlesQuery({});
-  const [userId] = useState('67387f70eb2b74a2381d13d8')
+  const { data: user} = useGetUserQuery({});
   const [likeArticle] = useLikeArticleMutation();
   const [unlikeArticle] = useUnlikeArticleMutation();
 
@@ -58,9 +59,8 @@ const Main: React.FC = () => {
           };
 
           const formattedTime = formatDistanceToNow(new Date(article.createdAt), { addSuffix: true });
-          const isLiked = article?.likedBy?.includes(userId);
-          const isDisliked = article?.dislikedBy?.includes(userId);
-
+          const isLiked = article?.likedBy?.includes(user?._id);
+          const isDisliked = article?.dislikedBy?.includes(user?._id);
           return (
             <div key={article._id} className="w-full border shadow-lg rounded-lg overflow-hidden mb-6">
               <div className="flex items-center p-3">
