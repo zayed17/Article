@@ -9,13 +9,22 @@ import cookieParser from 'cookie-parser';
 dotenv.config(); 
 
 const app = express();
+// const corsOptions = {
+//     // origin:"http://localhost:5173",
+//     origin:  'https://article-murex.vercel.app',
+//     methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: true,
+//   };
 const corsOptions = {
-    // origin:"http://localhost:5173",
-    origin:  'https://article-murex.vercel.app',
-    methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  };
+  origin: 'https://article-murex.vercel.app',  // Allow only this origin
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],  // Allowed headers
+  credentials: true,  // Allow credentials (cookies)
+  preflightContinue: false,  // Let Express handle OPTIONS requests
+  optionsSuccessStatus: 204,  // Status code for successful OPTIONS requests
+};
+app.use(cors(corsOptions));  // Apply the CORS middleware globally
 
 app.use(cors(corsOptions))
 
