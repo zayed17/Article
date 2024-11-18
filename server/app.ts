@@ -22,8 +22,6 @@ const corsOptions = {
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],  // Allowed headers
   credentials: true,  // Allow credentials (cookies)
-  preflightContinue: false,  // Let Express handle OPTIONS requests
-  optionsSuccessStatus: 204,  // Status code for successful OPTIONS requests
 };
 app.use(cors(corsOptions));  // Apply the CORS middleware globally
 
