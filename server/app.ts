@@ -17,7 +17,8 @@ const app = express();
 //     credentials: true,
 //   };
 const corsOptions = {
-  origin: 'https://article-murex.vercel.app',  // Allow only this origin
+  
+  origin: 'https://article-murex.vercel.app/',  // Allow only this origin
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],  // Allowed headers
   credentials: true,  // Allow credentials (cookies)
