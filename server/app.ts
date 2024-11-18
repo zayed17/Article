@@ -17,12 +17,13 @@ const corsOptions = {
     credentials: true,
   };
 
+app.use(cors(corsOptions))
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); 
 
 connectDB(); 
-app.use(cors(corsOptions))
 
 app.use('/api/users', userRoute);
 app.use('/api/articles', articleRoutes);
