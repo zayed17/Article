@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Spin, Alert, Button, Avatar } from 'antd';
 import { LikeOutlined, DislikeOutlined, LikeFilled, DislikeFilled } from '@ant-design/icons'; 
 import { Link } from 'react-router-dom';
