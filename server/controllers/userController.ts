@@ -53,10 +53,10 @@ export const signup = async (req: Request, res: Response) => {
       }
       const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
       res.cookie('userToken', token, {
-        httpOnly: true,      // Prevents JavaScript access to the cookie (secure)
-        sameSite: 'none',    // Must be 'None' for cross-origin cookies
-        secure: true,        // If using HTTPS, the 'secure' flag is necessary
-        maxAge: 3600000,     // Cookie expiration time
+        httpOnly: true,     
+        sameSite: 'none',    
+        secure: true,       
+        maxAge: 3600000,     
       });      res.status(200).json({ message: 'Login successful' });
     } catch (error) {
       console.error('Login error:', error);
