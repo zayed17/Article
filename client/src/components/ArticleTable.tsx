@@ -1,17 +1,21 @@
 import { useGetArticlesQuery,useDeleteArticleMutation } from '../api/articleApi';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Table, Button, Popconfirm, Spin, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const ArticleTable = () => {
   const { data: articles, error, isLoading,refetch } = useGetArticlesQuery({});
   const [deleteArticle] = useDeleteArticleMutation(); 
-
+  const navigate = useNavigate()
   const handleDelete = async(id: string) => {
     await deleteArticle(id).unwrap(); 
     refetch()
     message.success('Article delete successful');
-
   };
+
+  const handleEdit = (id:string)=>{
+    navigate(`/edit-article/${id}`)
+  }
 
   const columns = [
     {
@@ -59,11 +63,11 @@ const ArticleTable = () => {
             type="default"
             shape="circle"
             icon={<EditOutlined />}
-            // onClick={() => handleEdit(record)} 
+            onClick={() => handleEdit(record._id)} 
           />
           <Popconfirm
             title="Are you sure you want to delete this article?"
-            onConfirm={() => handleDelete(record._id)} // Pass the article ID here
+            onConfirm={() => handleDelete(record._id)} 
             okText="Yes"
             cancelText="No"
           >
