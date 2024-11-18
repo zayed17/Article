@@ -33,7 +33,6 @@ export const addArticle = async (req: any, res: Response) => {
     export const getArticles = async (req: any, res: Response) => {
         try {
           const articles = await Article.find({}).populate('userId')
-          // console.log(articles)
           res.status(200).json(articles);
         } catch (error: any) {
           res.status(500).json({message: 'Failed to fetch articles',error: error.message,});
@@ -179,5 +178,18 @@ export const deleteArticle = async (req: any, res: Response) => {
   } catch (error) {
     console.error('Error deleting article:', error);
     res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const getArticle = async (req: any, res: Response) => {
+  try {
+    const { articleId } = req.params;
+
+    const articles = await Article.findOne({_id:articleId}).populate('userId')
+    console.log(articles)
+    res.status(200).json(articles);
+  } catch (error: any) {
+    res.status(500).json({message: 'Failed to fetch articles',error: error.message,});
   }
 };

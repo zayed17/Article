@@ -41,7 +41,11 @@ export const articleApi = createApi({
           method: 'DELETE',
         }),
       }),
+    getArticle: builder.query({
+        query: (id) => `get-article/${id}`, 
+      }),
+      
   }),
 });
 
-export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery,useDeleteArticleMutation } = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery,useDeleteArticleMutation ,useGetArticleQuery} = articleApi;

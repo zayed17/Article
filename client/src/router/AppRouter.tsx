@@ -5,6 +5,7 @@ import  SignUp  from '../pages/SignUp';
 import HomePage from '../pages/Home';
 import AddArticle from '../components/AddArticleForm';
 import UserProfile from '../pages/UserProfile';
+import ArticlePage from '../pages/Article';
 
 
 const AppRouter: React.FC = () => {
@@ -16,6 +17,7 @@ const AppRouter: React.FC = () => {
          <Route path='/signup' element={<SignUp/>} />
          <Route path='/add-article' element={<AddArticle/>} />
          <Route path='/profile' element={<UserProfile/>} />
+         <Route path='/article/:articleId' element={<ArticlePage/>} />
       </Routes>
     </Router>
   );
