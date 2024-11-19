@@ -9,18 +9,18 @@ import cookieParser from 'cookie-parser';
 dotenv.config(); 
 
 const app = express();
-const corsOptions = {
-    origin:"http://localhost:5173",
-    methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  };
 // const corsOptions = {
-//   origin: process.env.VITE_API_URL || 'https://article-murex.vercel.app',
-//   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  
-//   allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], 
-//   credentials: true,  
-// };
+//     origin:"http://localhost:5173",
+//     methods: ['GET', 'POST', 'OPTIONS','PUT','PATCH','DELETE'], 
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: true,
+//   };
+const corsOptions = {
+  origin: process.env.VITE_API_URL || 'https://article-murex.vercel.app',
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],  
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], 
+  credentials: true,  
+};
 app.use(cors(corsOptions));  
 
 
