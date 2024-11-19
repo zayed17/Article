@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Article from '../models/articleModel';
-import mongoose from 'mongoose';
-import { Types } from 'mongoose'; // Ensure mongoose.Types is available
+import User from '../models/userModel';
+import mongoose ,{ Types } from 'mongoose';
 
 
 
@@ -31,13 +31,21 @@ export const addArticle = async (req: any, res: Response) => {
     };
     
     export const getArticles = async (req: any, res: Response) => {
-        try {
-          const articles = await Article.find({}).populate('userId')
-          res.status(200).json(articles);
-        } catch (error: any) {
-          res.status(500).json({message: 'Failed to fetch articles',error: error.message,});
+      try {
+        const userId = req.userId;
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+           res.status(404).json({ message: 'User not found' });
+           return
         }
-      };
+        const articles = await Article.find({category: { $in: user.preferences }, userId: { $ne: userId } }).populate('userId');
+        console.log(articles,"checking ")
+        res.status(200).json(articles);
+      } catch (error: any) {
+        res.status(500).json({ message: 'Failed to fetch articles', error: error.message });
+      }
+    };
+    
 
 
     export const likeArticle = async (req: any, res: Response) => {
@@ -191,5 +199,23 @@ export const getArticle = async (req: any, res: Response) => {
     res.status(200).json(articles);
   } catch (error: any) {
     res.status(500).json({message: 'Failed to fetch articles',error: error.message,});
+  }
+};
+
+export const userArticles = async (req: any, res: Response) => {
+  try {
+    const userId = req.userId;
+    const articles = await Article.find({userId}).populate('userId');
+    res.status(200).json(articles);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to fetch articles', error: error.message });
+  }
+};
+
+export const updateArticle = async (req: any, res: Response) => {
+  try {
+  console.log(req.body)
+  } catch (error: any) {
+    res.status(500).json({ message: 'Failed to fetch articles', error: error.message });
   }
 };

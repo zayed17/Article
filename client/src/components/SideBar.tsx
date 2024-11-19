@@ -14,7 +14,7 @@ const Sidebar: React.FC = () => {
     <aside className="w-1/4 h-screen sticky top-16 p-4 bg-gray-100 shadow-lg">
       <div className="text-center mb-6">
         <Avatar size={64} icon={<UserOutlined />} />
-        <h2 className="text-lg font-semibold mt-2">{data.name || 'User Name'}</h2>
+        <h2 className="text-lg font-semibold mt-2">{data.firstName}  {data.lastName}</h2>
         <p className="text-sm text-gray-500">{data.email || 'user@example.com'}</p>
       </div>
       <Menu mode="vertical" className="bg-transparent border-0">

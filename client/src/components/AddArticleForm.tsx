@@ -92,7 +92,7 @@ const AddArticle: React.FC = () => {
           <Form.Item label="Category" name="category" initialValue={category} rules={[{ required: true, message: "Please select a category!" }]}>
             <Select onChange={handleCategoryChange}>
               {categories.map((cat) => (
-                <Option key={cat} value={cat.toLowerCase()}>
+                <Option key={cat} value={cat}>
                   {cat}
                 </Option>
               ))}

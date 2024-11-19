@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Select, Tag, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useGetArticleQuery, useDeleteArticleMutation } from "../api/articleApi";
+import { useGetArticleQuery, useUpdateArticleMutation } from "../api/articleApi";
 import { categories } from "../data/categories";
 import { validateWordCount } from "../utils/validations";
 import { useParams, useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ const { Option } = Select;
 const EditArticle: React.FC = () => {
     const { articleId } = useParams<{ articleId: string }>();
     const { data: article, isLoading: articleLoading, isError } = useGetArticleQuery(articleId);
-    const [updateArticle, { isLoading }] = useDeleteArticleMutation();
+    const [updateArticle, { isLoading }] = useUpdateArticleMutation();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [fileList, setFileList] = useState<any[]>([]);
     const [category, setCategory] = useState<string>(categories[0]);

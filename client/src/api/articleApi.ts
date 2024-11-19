@@ -45,8 +45,18 @@ export const articleApi = createApi({
     getArticle: builder.query({
         query: (id) => `get-article/${id}`, 
       }),
+    getUsersArticle: builder.query({
+        query: () => 'user-articles',
+      }),
+    updateArticle: builder.mutation({
+        query: (credentials) => ({
+          url: 'update-article',
+          method: 'PUT', 
+          body: credentials,
+        }),
+      }),
       
   }),
 });
 
-export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery,useDeleteArticleMutation ,useGetArticleQuery} = articleApi;
+export const { useAddArticleMutation, useGetArticlesQuery,useLikeArticleMutation,useUnlikeArticleMutation,useGetUserStatsQuery,useDeleteArticleMutation ,useGetArticleQuery,useGetUsersArticleQuery,useUpdateArticleMutation} = articleApi;

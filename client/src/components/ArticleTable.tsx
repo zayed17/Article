@@ -1,10 +1,10 @@
-import { useGetArticlesQuery,useDeleteArticleMutation } from '../api/articleApi';
+import { useGetUsersArticleQuery,useDeleteArticleMutation } from '../api/articleApi';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Table, Button, Popconfirm, Spin, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 const ArticleTable = () => {
-  const { data: articles, error, isLoading,refetch } = useGetArticlesQuery({});
+  const { data: articles, error, isLoading,refetch } = useGetUsersArticleQuery({});
   const [deleteArticle] = useDeleteArticleMutation(); 
   const navigate = useNavigate()
   const handleDelete = async(id: string) => {

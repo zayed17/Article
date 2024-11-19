@@ -3,7 +3,7 @@ import multer from 'multer';
 import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3'; 
 import dotenv from 'dotenv';
-import { addArticle,getArticles, likeArticle ,unlikeArticle,getUserArticleStats , deleteArticle , getArticle} from '../controllers/articleController';
+import { addArticle,getArticles, likeArticle ,unlikeArticle,getUserArticleStats , deleteArticle , getArticle,userArticles,updateArticle} from '../controllers/articleController';
 import authMiddleware from '../middleware/authMiddleware';
 
 dotenv.config();
@@ -34,10 +34,12 @@ const router = express.Router();
 
 router.post('/add-article', upload.single('image'), authMiddleware, addArticle);
 router.get('/get-articles',authMiddleware, getArticles);
+router.get('/user-articles',authMiddleware, userArticles);
 router.patch('/like/:articleId', authMiddleware, likeArticle);
 router.patch('/unlike/:articleId', authMiddleware, unlikeArticle);
 router.get('/user-stats', authMiddleware, getUserArticleStats);
 router.delete('/delete/:articleId', authMiddleware, deleteArticle);
 router.get('/get-article/:articleId',authMiddleware, getArticle);
+router.put('/update-article',authMiddleware, updateArticle);
 
 export default router;
