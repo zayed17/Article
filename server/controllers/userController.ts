@@ -159,8 +159,9 @@ export const signup = async (req: Request, res: Response) => {
     try {
       res.clearCookie("userToken", {
         httpOnly: true,
-        secure: true,  
-        sameSite: "strict",
+    sameSite: 'none',
+    secure: true,
+    maxAge: 0,
       });
   
       res.status(200).json({ message: "Successfully logged out" });
