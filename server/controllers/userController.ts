@@ -154,3 +154,18 @@ export const signup = async (req: Request, res: Response) => {
     }
   };
   
+
+  export const logout = (req: Request, res: Response) => {
+    try {
+      res.clearCookie("userToken", {
+        httpOnly: true,
+        secure: true,  
+        sameSite: "strict",
+      });
+  
+      res.status(200).json({ message: "Successfully logged out" });
+    } catch (error:any) {
+      console.error("Logout error:", error.message);
+      res.status(500).json({ message: "Failed to logout", error: error.message });
+    }
+  };
