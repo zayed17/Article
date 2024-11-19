@@ -4,7 +4,7 @@ export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
     // baseUrl: 'http://localhost:1717/api/users/',
-    baseUrl: import.meta.env.NEXT_PUBLIC_API_URL || 'https://server-inky-mu.vercel.app/api/users',
+    baseUrl: import.meta.env.NEXT_PUBLIC_API_URL || 'https://server-inky-mu.vercel.app/api/users/',
     credentials: 'include',
   }),
   endpoints: (builder) => ({
