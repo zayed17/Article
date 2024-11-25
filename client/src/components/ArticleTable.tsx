@@ -1,106 +1,227 @@
-import { useGetUsersArticleQuery,useDeleteArticleMutation } from '../api/articleApi';
-import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Table, Button, Popconfirm, Spin, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, message, Select, Tag, Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useGetArticleQuery, useUpdateArticleMutation } from "../api/articleApi";
+import { categories } from "../data/categories";
+import { validateWordCount } from "../utils/validations";
+import { useParams, useNavigate } from "react-router-dom";
 
-const ArticleTable = () => {
-  const { data: articles, error, isLoading,refetch } = useGetUsersArticleQuery({});
-  const [deleteArticle] = useDeleteArticleMutation(); 
-  const navigate = useNavigate()
-  const handleDelete = async(id: string) => {
-    await deleteArticle(id).unwrap(); 
-    refetch()
-    message.success('Article delete successful');
-  };
+const { TextArea } = Input;
+const { Option } = Select;
 
-  const handleEdit = (id:string)=>{
-    navigate(`/edit-article/${id}`)
-  }
+const EditArticle: React.FC = () => {
+    const { articleId } = useParams<{ articleId: string }>();
+    const { data: article, isLoading: articleLoading, isError } = useGetArticleQuery(articleId);
+    const [updateArticle, { isLoading }] = useUpdateArticleMutation();
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [fileList, setFileList] = useState<any[]>([]);
+    const [category, setCategory] = useState<string>(categories[0]);
+    const [tags, setTags] = useState<string[]>([]);
+    const [inputTag, setInputTag] = useState<string>("");
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
 
-  const columns = [
-    {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
-      render: (text: string) => <span>{text}</span>,
-    },
-    {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      render: (text: string) => <span>{text}</span>,
-    },
-    {
-      title: 'Tags',
-      dataIndex: 'tags',
-      key: 'tags',
-      render: (tags: string[]) => <span>{tags.join(', ')}</span>,
-    },
-    {
-      title: 'Likes',
-      dataIndex: 'likedBy',
-      key: 'likes',
-      render: (likedBy: any) => <span>{likedBy.length}</span>,
-    },
-    {
-      title: 'Dislikes',
-      dataIndex: 'dislikedBy',
-      key: 'dislikes',
-      render: (dislikedBy: any) => <span>{dislikedBy.length}</span>,
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (_: any, record: any) => (
-        <div className="flex gap-3">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<EyeOutlined />}
-            // onClick={() => handleView(record)} 
-          />
-          <Button
-            type="default"
-            shape="circle"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record._id)} 
-          />
-          <Popconfirm
-            title="Are you sure you want to delete this article?"
-            onConfirm={() => handleDelete(record._id)} 
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
-          </Popconfirm>
+    useEffect(() => {
+        if (article) {
+            setCategory(article.category);
+            setTags(article.tags || []);
+            setImagePreview(article.imageUrl || null);
+            setFileList(article.imageUrl ? [{ url: article.imageUrl }] : []);
+        }
+    }, [article]);
+
+    const onFinish = async (values: any) => {
+        if (tags.length === 0) {
+            message.error("Please add at least one tag.");
+            return;
+        }
+
+        if (fileList.length === 0) {
+            message.error("Please upload an image.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("title", values.title);
+        formData.append("shortDescription", values.shortDescription);
+        formData.append("content", values.content);
+        formData.append("category", category);
+        tags.forEach((tag) => formData.append("tags[]", tag));
+        if (fileList[0].originFileObj) {
+            formData.append("image", fileList[0].originFileObj);
+        }
+
+        try {
+            await updateArticle({ articleId, formData }).unwrap();
+            message.success("Article updated successfully!");
+            navigate(`/articles/${articleId}`);
+        } catch (error) {
+            console.error(error);
+            message.error("Failed to update the article.");
+        }
+    };
+
+    const handleUploadChange = ({ fileList: newFileList }: any) => {
+        setFileList(newFileList);
+        if (newFileList.length > 0) {
+            const file = newFileList[0].originFileObj;
+            const reader = new FileReader();
+            reader.onload = () => setImagePreview(reader.result as string);
+            reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
+        }
+    };
+
+    const handleAddTag = () => {
+        if (inputTag.trim() && !tags.includes(inputTag.trim())) {
+            setTags([...tags, inputTag.trim()]);
+            setInputTag("");
+        } else if (!inputTag.trim()) {
+            message.error("Tag cannot be empty.");
+        } else {
+            message.error("Tag already exists.");
+        }
+    };
+
+    const handleDeleteTag = (tag: string) => {
+        setTags(tags.filter((t) => t !== tag));
+    };
+
+    const handleCategoryChange = (value: string) => {
+        setCategory(value);
+    };
+
+    if (articleLoading) {
+        return (
+            <div className="container mx-auto p-6">
+                <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
+                    Loading Article...
+                </h1>
+            </div>
+        );
+    }
+
+    if (isError || !article) {
+        return (
+            <div className="container mx-auto p-6">
+                <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
+                    Article not found
+                </h1>
+            </div>
+        );
+    }
+
+    return (
+        <div className="container mx-auto p-6">
+            <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
+                Edit Article
+            </h1>
+            <Form
+                form={form}
+                name="editArticle"
+                onFinish={onFinish}
+                layout="vertical"
+                initialValues={{
+                    title: article.title,
+                    shortDescription: article.shortDescription,
+                    content: article.content,
+                }}
+                className="bg-white p-8 rounded-lg shadow-lg"
+            >
+                <Form.Item
+                    label="Title"
+                    name="title"
+                    rules={[
+                        { required: true, message: "Please input the title of the article!" },
+                        { min: 8, message: "Title must be at least 8 characters long!" },
+                    ]}
+                >
+                    <Input placeholder="Enter the article title" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Short Description"
+                    name="shortDescription"
+                    rules={[
+                        { required: true, message: "Please input the short description!" },
+                        { validator: (_, value) => validateWordCount(value, 3) },
+                    ]}
+                >
+                    <TextArea placeholder="Enter a short description of the article" rows={4} />
+                </Form.Item>
+
+                <Form.Item
+                    label="Article Content"
+                    name="content"
+                    rules={[
+                        { required: true, message: "Please input the full content of the article!" },
+                        { validator: (_, value) => validateWordCount(value, 50) },
+                    ]}
+                >
+                    <TextArea placeholder="Write the full article content" rows={6} />
+                </Form.Item>
+
+                <Form.Item label="Category" required>
+                    <Select value={category} onChange={handleCategoryChange}>
+                        {categories.map((cat) => (
+                            <Option key={cat} value={cat.toLowerCase()}>
+                                {cat}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item label="Tags">
+                    <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                            <Input
+                                value={inputTag}
+                                onChange={(e) => setInputTag(e.target.value)}
+                                onPressEnter={handleAddTag}
+                                placeholder="Add a tag"
+                            />
+                            <Button onClick={handleAddTag}>Add Tag</Button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {tags.map((tag, index) => (
+                                <Tag key={index} closable onClose={() => handleDeleteTag(tag)}>
+                                    {tag}
+                                </Tag>
+                            ))}
+                        </div>
+                    </div>
+                </Form.Item>
+
+                <Form.Item label="Article Image" required>
+                    <Upload
+                        listType="picture-card"
+                        fileList={fileList}
+                        onChange={handleUploadChange}
+                        beforeUpload={() => false}
+                    >
+                        {fileList.length < 1 && (
+                            <div>
+                                <PlusOutlined />
+                                <div style={{ marginTop: 8 }}>Upload</div>
+                            </div>
+                        )}
+                    </Upload>
+                    {imagePreview && (
+                        <div>
+                            <img src={imagePreview} alt="preview" style={{ width: "100%", marginTop: "10px" }} />
+                        </div>
+                    )}
+                </Form.Item>
+
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" block loading={isLoading}>
+                        Update Article
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
-      ),
-    },
-  ];
-
-  return (
-    <div className="mt-8 text-center sm:text-left max-w-screen-lg mx-auto"> 
-      <h2 className="text-2xl font-bold text-gray-900">Articles Posted</h2>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <Spin size="large" />
-        </div>
-      ) : error ? (
-        <p className="text-red-600">Error loading articles</p>
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={articles}
-          rowClassName="small-row"
-          scroll={{ x: 'max-content' }}
-          className="mt-4"  
-        />
-      )}
-    </div>
-  );
+    );
 };
 
-export default ArticleTable;
+export default EditArticle;

@@ -1,13 +1,12 @@
 import React from 'react';
 import { UserOutlined, ReadOutlined, PlusCircleOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Avatar, Menu, Button } from 'antd';
 import { useGetUserQuery, useLogoutMutation } from '../api/userApi';
 
 const Sidebar: React.FC = () => {
   const { data, isLoading, isError } = useGetUserQuery({});
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const navigate = useNavigate(); 
 
   if (isLoading) return <div>Loading...</div>;
   if (isError || !data) return <div>Error loading user info</div>;
@@ -15,7 +14,7 @@ const Sidebar: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout({}).unwrap();
-      navigate('/login');
+      window.location.href = '/login'
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -40,14 +39,8 @@ const Sidebar: React.FC = () => {
         </Menu.Item>
       </Menu>
 
-      <div className="mt-6 text-center">
-        <Button
-          type="primary"
-          icon={<LogoutOutlined />}
-          loading={isLoggingOut}
-          onClick={handleLogout}
-          block
-        >
+      <div className="mt-6  text-center">
+        <Button type="primary" icon={<LogoutOutlined />} loading={isLoggingOut} onClick={handleLogout} block>
           Logout
         </Button>
       </div>

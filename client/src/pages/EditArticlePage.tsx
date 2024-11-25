@@ -8,7 +8,6 @@ const EditArticlePage: React.FC = () => {
          <Header />
           <div className="flex mt-16">
            <EditArticle />
-            
           </div>
          </div>
     );
